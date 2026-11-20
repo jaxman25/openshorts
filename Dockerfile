@@ -6,7 +6,7 @@ FROM python:3.11-slim@sha256:65bd3d9f1d7fa268dd1909973ba7eb4bdf41f6dcf2cfbe76ba9
 WORKDIR /app
 
 # Install build dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN find /etc/apt -type f \( -name '*.list' -o -name '*.sources' \) -exec sed -i 's|http://deb.debian.org|https://deb.debian.org|g' {} + && apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
@@ -58,7 +58,7 @@ FROM rust:1-slim-trixie@sha256:7eab7ce19273ce785e0ca7578bdf7bc1fcbae621775a81973
 ARG GPU=0
 COPY osrender /src/osrender
 RUN mkdir -p /out && if [ "$GPU" = "1" ]; then \
-      apt-get update && apt-get install -y --no-install-recommends \
+      find /etc/apt -type f \( -name '*.list' -o -name '*.sources' \) -exec sed -i 's|http://deb.debian.org|https://deb.debian.org|g' {} + && apt-get update && apt-get install -y --no-install-recommends \
         pkg-config clang libclang-dev libavcodec-dev libavformat-dev libavutil-dev \
         libavfilter-dev libavdevice-dev libswscale-dev libswresample-dev \
       && rm -rf /var/lib/apt/lists/* \
@@ -77,7 +77,7 @@ WORKDIR /app
 # fonts-noto-core (~42 MB) is the glyph fallback for every other script:
 # Arabic, Hebrew, Devanagari, Bengali, Thai... burned as tofu boxes without it
 # (issue #89). libass shapes and orders RTL text itself once a font has the glyphs.
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN find /etc/apt -type f \( -name '*.list' -o -name '*.sources' \) -exec sed -i 's|http://deb.debian.org|https://deb.debian.org|g' {} + && apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     curl \
     libgl1 \

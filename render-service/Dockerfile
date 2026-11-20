@@ -1,9 +1,10 @@
 # Base images are pinned by digest (@sha256): the tag is only a label.
 # To update one: docker buildx imagetools inspect <tag> and paste the new digest.
 FROM node:18-bookworm-slim@sha256:f9ab18e354e6855ae56ef2b290dd225c1e51a564f87584b9bd21dd651838830e
+COPY --from=python:3.11-slim@sha256:65bd3d9f1d7fa268dd1909973ba7eb4bdf41f6dcf2cfbe76ba9528b170f3fd79 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
 # Install Chromium and FFmpeg for Remotion rendering
-RUN apt-get update && \
+RUN find /etc/apt -type f \( -name '*.list' -o -name '*.sources' \) -exec sed -i 's|http://deb.debian.org|https://deb.debian.org|g' {} + && apt-get update && \
     apt-get install -y --no-install-recommends chromium ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
